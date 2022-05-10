@@ -1,12 +1,12 @@
 function TicTacToe(robotMode = true) {
-    this.robotMode = robotMode;
+    this._robotMode = robotMode;
     let turnX = true;
     let board = [[' ', ' ', ' '], [' ', ' ', ' '], [' ', ' ', ' ']];
     //'X', 'X', 'X'
     this.startGame = function () {
         while (!isGameSolved()) {
             displayBoard();
-            if (this.robotMode === true) robotMakesMove();
+            if (this._robotMode === true) robotMakesMove();
             promptPlayerMove();
         }
         congratulatePlayer();
@@ -69,22 +69,13 @@ function TicTacToe(robotMode = true) {
     }
 
     let robotMakesMove = function () {
-        if (isOpponentAboutToWin()) {
-            //get coords
-            let coords = getCoordsOfWinningPlay();
-            placeMark(coords);
-        } else {
-            let coords = findOptimalWinAngle();
-            placeMark(coords);
-        }
-    }
-
-    let isOpponentAboutToWin = function () {
-        if (checkRows() === true || checkCols() === true || checkDiag() === true) {
-            return true;
-        }
-        else {
-            return false;
+        let coords;
+        while (true) {
+            coords = [Math.floor((Math.random() * 3)), Math.floor((Math.random() * 3))];
+            if (board[coords[0]][coords[1]] === ' ') {
+                placeMark(coords.join(' '));
+                break;
+            }
         }
     }
 
@@ -103,21 +94,18 @@ function TicTacToe(robotMode = true) {
         return false;
     }
     let checkDiag = function () {
-        if (board[0][0] === 'X' && board[1][1] === 'X' || board[1][1] === 'X' && board[2][2] === 'X'||board[0][0] === 'X' && board[2][2] === 'X' || board[0][2] === 'X' && board[1][1] === 'X'||board[1][1] === 'X' && board[2][0] === 'X' || board[0][2] === 'X' && board[2][0] === 'X') {
+        if (board[0][0] === 'X' && board[1][1] === 'X' || board[1][1] === 'X' && board[2][2] === 'X' || board[0][0] === 'X' && board[2][2] === 'X' || board[0][2] === 'X' && board[1][1] === 'X' || board[1][1] === 'X' && board[2][0] === 'X' || board[0][2] === 'X' && board[2][0] === 'X') {
             return true;
         } else {
             return false;
         }
     }
 
-    let getCoordsOfWinningPlay = function(){
-        
-    }
 
     let congratulatePlayer = function () {
         displayBoard();
         turnX = turnX ? false : true;
-        console.log(`Congrats player ${turnX ? 'X' : 'O'}`);
+        console.log(`Congrats player ${turnX ? 'X' : 'O'}!`);
     }
 
     let spotIsAvailable = function (coord) {
@@ -134,3 +122,5 @@ function TicTacToe(robotMode = true) {
 
 let xAndO = new TicTacToe();
 xAndO.startGame();
+
+//TODO turn from consolelogging program to webapp
