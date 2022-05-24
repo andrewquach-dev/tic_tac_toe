@@ -2,15 +2,26 @@ function TicTacToe(robotMode = true) {
     this._robotMode = robotMode;
     let turnX = true;
     let board = [[' ', ' ', ' '], [' ', ' ', ' '], [' ', ' ', ' ']];
-    //'X', 'X', 'X'
     this.startGame = function () {
-        while (!isGameSolved()) {
-            displayBoard();
-            if (this._robotMode === true) robotMakesMove();
-            promptPlayerMove();
+        while (true) {
+            if (!isGameSolved()) {
+                if (this._robotMode === true) robotMakesMove();
+                promptPlayerMove();
+                displayBoard();
+            }
+
+            console.log(`Is game solved? = ${isGameSolved()}`);
+
+            if (isDraw()) {
+                console.log("It's a draw.");
+                break;
+            } else if (isGameSolved()) {
+                congratulatePlayer();
+                break;
+            }
         }
-        congratulatePlayer();
     }
+
 
     let displayBoard = function () {
         let boardString = "";
@@ -32,7 +43,10 @@ function TicTacToe(robotMode = true) {
     }
 
     let isGameSolved = function () {
-        return thereAreThreeInRow() || thereAreThreeInCol() || thereAreThreeDiag() ? true : false;
+        return thereAreThreeInRow() === true || thereAreThreeInCol() === true || thereAreThreeDiag() === true ? true : false;
+    }
+    let isDraw = function () {
+        return !isGameSolved && !board.some(row => !row.includes(' ')) ? true : false;
     }
 
     let thereAreThreeInRow = function () {
@@ -74,35 +88,15 @@ function TicTacToe(robotMode = true) {
             coords = [Math.floor((Math.random() * 3)), Math.floor((Math.random() * 3))];
             if (board[coords[0]][coords[1]] === ' ') {
                 placeMark(coords.join(' '));
+                displayBoard();
                 break;
             }
         }
     }
 
-    let checkRows = function () {
-        for (let row of board) {
-            if (row.filter(spot => spot === 'X').length === 2) return true;
-        }
-        return false;
-    }
-    let checkCols = function () {
-        for (let i = 0; i < 3; i++) {
-            if (board[0][i] === 'X' && board[1][i] === 'X' || board[1][i] === 'X' && board[2][i] === 'X' || board[2][i] === 'X' && board[0][i] === 'X') {
-                return true;
-            }
-        }
-        return false;
-    }
-    let checkDiag = function () {
-        if (board[0][0] === 'X' && board[1][1] === 'X' || board[1][1] === 'X' && board[2][2] === 'X' || board[0][0] === 'X' && board[2][2] === 'X' || board[0][2] === 'X' && board[1][1] === 'X' || board[1][1] === 'X' && board[2][0] === 'X' || board[0][2] === 'X' && board[2][0] === 'X') {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
 
     let congratulatePlayer = function () {
+        //todo fix
         displayBoard();
         turnX = turnX ? false : true;
         console.log(`Congrats player ${turnX ? 'X' : 'O'}!`);
@@ -117,10 +111,9 @@ function TicTacToe(robotMode = true) {
         turnX = turnX ? false : true;
     }
 
-
 }
 
 let xAndO = new TicTacToe();
 xAndO.startGame();
 
-//TODO turn from consolelogging program to webapp
+//TODO For some reason, player O is able to win but player X is not able to win (congratualtio message does not appear) and the game continues even if all spots are filled.
