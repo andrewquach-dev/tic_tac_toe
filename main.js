@@ -1,29 +1,35 @@
-function TicTacToe(robotMode = true) {
-    this._robotMode = robotMode;
+function TicTacToe(againstRobot = true) {
+
+    this._againstRobot = againstRobot;
     let turnX = true;
     let board = [[' ', ' ', ' '], [' ', ' ', ' '], [' ', ' ', ' ']];
+    let isOver = false;
+
     this.startGame = function () {
-        while (true) {
-            if (!isGameSolved()) {
-                if (this._robotMode === true) robotMakesMove();
-                promptPlayerMove();
-                displayBoard();
-            }
+        while (!isOver) {
+            if (this._againstRobot === true) robotMakesMove();
+            displayBoard();
+            promptPlayerMove();
+            displayBoard();
 
-            console.log(`Is game solved? = ${isGameSolved()}`);
+            
 
-            if (isDraw()) {
-                console.log("It's a draw.");
-                break;
-            } else if (isGameSolved()) {
-                congratulatePlayer();
-                break;
-            }
+        }
+    }
+    function check(){
+        if (theresThree()) {
+            isOver = true;
+            congratulatePlayer();
+        } else if (isDraw()) {
+            isOver = true;
+            console.log("It's a draw.");
+        } else {
+            console.log('game not solved...')
         }
     }
 
 
-    let displayBoard = function () {
+    function displayBoard() {
         let boardString = "";
 
         for (let i = 0; i < 3; i++) {
@@ -42,18 +48,19 @@ function TicTacToe(robotMode = true) {
         console.log(boardString)
     }
 
-    let isGameSolved = function () {
+    let theresThree = function () {
         return thereAreThreeInRow() === true || thereAreThreeInCol() === true || thereAreThreeDiag() === true ? true : false;
     }
     let isDraw = function () {
-        return !isGameSolved && !board.some(row => !row.includes(' ')) ? true : false;
+        return board.every(row => row.every(ele=>ele!==' ')) ? true : false;
     }
 
     let thereAreThreeInRow = function () {
-        for (let row of board) {
-            if (row.every(mark => mark === 'X') || row.every(mark => mark === 'O')) return true;
-        }
-        return false;
+        // for (let row of board) {
+        //     if (row.every(mark => mark === 'X') || row.every(mark => mark === 'O')) return true;
+        // }
+        // return false;
+        return board.some(row => row.every(ele => ele === 'X')||row.every(ele => ele === 'O'));
     }
 
     let thereAreThreeInCol = function () {
@@ -88,7 +95,6 @@ function TicTacToe(robotMode = true) {
             coords = [Math.floor((Math.random() * 3)), Math.floor((Math.random() * 3))];
             if (board[coords[0]][coords[1]] === ' ') {
                 placeMark(coords.join(' '));
-                displayBoard();
                 break;
             }
         }
@@ -96,10 +102,10 @@ function TicTacToe(robotMode = true) {
 
 
     let congratulatePlayer = function () {
-        //todo fix
-        displayBoard();
-        turnX = turnX ? false : true;
+        turnX = turnX === true ? false : true;
         console.log(`Congrats player ${turnX ? 'X' : 'O'}!`);
+
+        displayBoard();
     }
 
     let spotIsAvailable = function (coord) {
@@ -108,7 +114,8 @@ function TicTacToe(robotMode = true) {
 
     let placeMark = function (coord) {
         board[coord.split(' ')[0]][coord.split(' ')[1]] = turnX ? 'X' : 'O';
-        turnX = turnX ? false : true;
+        turnX = turnX === true ? false : true;
+        check();
     }
 
 }
@@ -116,4 +123,4 @@ function TicTacToe(robotMode = true) {
 let xAndO = new TicTacToe();
 xAndO.startGame();
 
-//TODO For some reason, player O is able to win but player X is not able to win (congratualtio message does not appear) and the game continues even if all spots are filled.
+//TODO make gui
