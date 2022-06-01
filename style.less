@@ -1,0 +1,112 @@
+/* Box Model Hack */
+
+* {
+    box-sizing: border-box;
+}
+
+
+/* Clear fix hack */
+
+.clearfix:after {
+    content: ".";
+    display: block;
+    clear: both;
+    visibility: hidden;
+    line-height: 0;
+    height: 0;
+}
+
+.clear {
+    clear: both;
+}
+
+
+/******************************************
+/* BASE STYLES
+/*******************************************/
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-size: 20px;
+    font-family: 'Roboto', sans-serif;
+    overflow-x: hidden !important;
+}
+
+:root {
+    --primary: #ECA221;
+    --dark: #000;
+    --medium: #1b1b1b;
+    --light: #2e2e2e;
+}
+
+
+/******************************************
+/* LAYOUT
+/*******************************************/
+
+
+/* Mobile */
+
+@media only screen and (min-width: 0em) {
+
+    header {
+        display: grid;
+        place-content: center;
+
+        h1 {
+            text-align: center;
+        }
+    }
+
+    main {
+        padding: 100/20em;
+
+        #grid {
+            display: grid;
+            place-content: center;
+
+            tr {
+                &:nth-child(-n+2) {
+                    td {
+                        border-bottom: dashed black;
+                    }
+                }
+
+                td {
+                    content: " ";
+                    font-size: 100/20em;
+                    padding: 0 5/20em;
+
+                    &:nth-child(-n+1) {
+                        border-right: dashed black;
+                    }
+
+                    &:nth-child(-n+2) {
+                        border-right: dashed black;
+                    }
+                }
+            }
+        }
+    }
+
+}
+
+
+/* Tablet */
+
+@media only screen and (min-width: 48em) {}
+
+
+/* Small Desktop */
+
+@media only screen and (min-width: 64em) {}
+
+
+/* Large Desktop */
+
+@media only screen and (min-width: 1300px) {}

@@ -121,6 +121,6 @@ function TicTacToe(againstRobot = true) {
 }
 
 let xAndO = new TicTacToe();
-xAndO.startGame();
+// xAndO.startGame();
 
 //TODO make gui
