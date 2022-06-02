@@ -12,11 +12,11 @@ function TicTacToe(againstRobot = true) {
             promptPlayerMove();
             displayBoard();
 
-            
+
 
         }
     }
-    function check(){
+    function check() {
         if (theresThree()) {
             isOver = true;
             congratulatePlayer();
@@ -52,7 +52,7 @@ function TicTacToe(againstRobot = true) {
         return thereAreThreeInRow() === true || thereAreThreeInCol() === true || thereAreThreeDiag() === true ? true : false;
     }
     let isDraw = function () {
-        return board.every(row => row.every(ele=>ele!==' ')) ? true : false;
+        return board.every(row => row.every(ele => ele !== ' ')) ? true : false;
     }
 
     let thereAreThreeInRow = function () {
@@ -60,7 +60,7 @@ function TicTacToe(againstRobot = true) {
         //     if (row.every(mark => mark === 'X') || row.every(mark => mark === 'O')) return true;
         // }
         // return false;
-        return board.some(row => row.every(ele => ele === 'X')||row.every(ele => ele === 'O'));
+        return board.some(row => row.every(ele => ele === 'X') || row.every(ele => ele === 'O'));
     }
 
     let thereAreThreeInCol = function () {
@@ -124,3 +124,18 @@ let xAndO = new TicTacToe();
 // xAndO.startGame();
 
 //TODO make gui
+let gridBoxes = document.getElementsByTagName('td');
+
+for (let box of gridBoxes) {
+    box.addEventListener("mouseover", function (event) {
+        if (event.target.data === undefined) {
+            event.target.innerHTML = 'X';
+            //xAndO.getPlayersTurn();
+        }
+        setTimeout(function () {
+            event.target.innerText = "\u00A0";
+        }, 500);
+    });
+}
+
+//TODO when clicking change to X
