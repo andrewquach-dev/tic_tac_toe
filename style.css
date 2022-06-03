@@ -143,7 +143,9 @@ body {
   main #grid tr td {
     content: " ";
     font-size: 5em;
-    padding: 0 0.25em;
+    height: 2em;
+    width: 2em;
+    text-align: center;
   }
   main #grid tr td:nth-child(-n+1) {
     border-right: dashed black;

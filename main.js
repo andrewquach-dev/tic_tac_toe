@@ -16,6 +16,30 @@ function TicTacToe(againstRobot = true) {
 
         }
     }
+
+    this.getTurn = function () {
+        return turnX ? 'X' : 'O';
+    }
+
+    this.updateArrays = function () {
+        let result = []
+        let rows = table.rows;
+        let cells, t;
+
+        // Iterate over rows
+        for (let i = 0, iLen = rows.length; i < iLen; i++) {
+            cells = rows[i].cells;
+            t = [];
+
+            // Iterate over cells
+            for (let j = 0, jLen = cells.length; j < jLen; j++) {
+                t.push(cells[j].textContent);
+            }
+            result.push(t);
+        }
+        board = result;
+    }
+
     function check() {
         if (theresThree()) {
             isOver = true;
@@ -120,7 +144,7 @@ function TicTacToe(againstRobot = true) {
 
 }
 
-let xAndO = new TicTacToe();
+let game = new TicTacToe();
 // xAndO.startGame();
 
 //TODO make gui
@@ -128,14 +152,21 @@ let gridBoxes = document.getElementsByTagName('td');
 
 for (let box of gridBoxes) {
     box.addEventListener("mouseover", function (event) {
-        if (event.target.data === undefined) {
-            event.target.innerHTML = 'X';
-            //xAndO.getPlayersTurn();
+        console.log(event.target.innerHTML);
+        if (event.target.innerHTML === "") {
+            event.target.innerHTML = game.getTurn();
+            setTimeout(function () {
+                event.target.innerText = "";
+            }, 500);
         }
-        setTimeout(function () {
-            event.target.innerText = "\u00A0";
-        }, 500);
+    });
+
+    box.addEventListener("click", function (event) {
+        event.target.innerHTML = game.getTurn();
+        game.updateArrays();
     });
 }
+
+
 
 //TODO when clicking change to X
