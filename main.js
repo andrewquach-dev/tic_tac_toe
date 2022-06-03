@@ -11,9 +11,6 @@ function TicTacToe(againstRobot = true) {
             displayBoard();
             promptPlayerMove();
             displayBoard();
-
-
-
         }
     }
 
@@ -21,7 +18,15 @@ function TicTacToe(againstRobot = true) {
         return turnX ? 'X' : 'O';
     }
 
-    this.updateArrays = function () {
+    this.changeTurn = function () {
+        turnX = turnX === true ? false : true;
+    }
+
+    this.isGameOver = function () {
+        return isOver === true ? true : false;
+    }
+
+    this.updateArrays = function (table) {
         let result = []
         let rows = table.rows;
         let cells, t;
@@ -38,17 +43,18 @@ function TicTacToe(againstRobot = true) {
             result.push(t);
         }
         board = result;
+        check();
+        console.log(board);
     }
 
     function check() {
         if (theresThree()) {
             isOver = true;
-            congratulatePlayer();
         } else if (isDraw()) {
             isOver = true;
             console.log("It's a draw.");
         } else {
-            console.log('game not solved...')
+            console.log('game not done yet...')
         }
     }
 
@@ -76,7 +82,7 @@ function TicTacToe(againstRobot = true) {
         return thereAreThreeInRow() === true || thereAreThreeInCol() === true || thereAreThreeDiag() === true ? true : false;
     }
     let isDraw = function () {
-        return board.every(row => row.every(ele => ele !== ' ')) ? true : false;
+        return board.every(row => row.every(ele => ele !== '')) ? true : false;
     }
 
     let thereAreThreeInRow = function () {
@@ -125,7 +131,7 @@ function TicTacToe(againstRobot = true) {
     }
 
 
-    let congratulatePlayer = function () {
+    this.congratulatePlayer = function () {
         turnX = turnX === true ? false : true;
         console.log(`Congrats player ${turnX ? 'X' : 'O'}!`);
 
@@ -152,7 +158,6 @@ let gridBoxes = document.getElementsByTagName('td');
 
 for (let box of gridBoxes) {
     box.addEventListener("mouseover", function (event) {
-        console.log(event.target.innerHTML);
         if (event.target.innerHTML === "") {
             event.target.innerHTML = game.getTurn();
             setTimeout(function () {
@@ -162,11 +167,26 @@ for (let box of gridBoxes) {
     });
 
     box.addEventListener("click", function (event) {
-        event.target.innerHTML = game.getTurn();
-        game.updateArrays();
+        if (event.target.innerHTML === '') {
+            event.target.innerHTML = game.getTurn();
+            game.updateArrays(document.getElementById('grid'));
+            game.changeTurn();
+            if (game.isGameOver()) {
+                game.congratulatePlayer();
+            }
+        }
     });
 }
 
 
 
 //TODO when clicking change to X
+//when we click a box get shape and change to that shape
+//update the 2darray
+//check if game is solved
+//if it's solved prevent from clicking and congratulate
+//if its not solved then robot will make move
+
+//TODO Replay button
+
+//TODO robot mode(if unchecked then against human) checkbox
