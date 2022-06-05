@@ -1,3 +1,5 @@
+
+
 function TicTacToe(againstRobot = true) {
 
     this._againstRobot = againstRobot;
@@ -45,6 +47,10 @@ function TicTacToe(againstRobot = true) {
         board = result;
         check();
         console.log(board);
+    }
+
+    function isGameOver(){
+        return isOver;
     }
 
     function check() {
@@ -152,13 +158,12 @@ function TicTacToe(againstRobot = true) {
 
 let game = new TicTacToe();
 // xAndO.startGame();
-
 //TODO make gui
 let gridBoxes = document.getElementsByTagName('td');
 
 for (let box of gridBoxes) {
     box.addEventListener("mouseover", function (event) {
-        if (event.target.innerHTML === "") {
+        if (event.target.innerHTML === "" && !game.isGameOver()) {
             event.target.innerHTML = game.getTurn();
             setTimeout(function () {
                 event.target.innerText = "";
@@ -167,18 +172,46 @@ for (let box of gridBoxes) {
     });
 
     box.addEventListener("click", function (event) {
-        if (event.target.innerHTML === '') {
+        if (event.target.innerHTML === ''&& !game.isGameOver()) {
             event.target.innerHTML = game.getTurn();
             game.updateArrays(document.getElementById('grid'));
             game.changeTurn();
             if (game.isGameOver()) {
                 game.congratulatePlayer();
+                openModal();
             }
         }
     });
 }
+const closeModalButtons = document.querySelectorAll('[data-close-button]')
+const overlay = document.getElementById('overlay')
 
 
+
+overlay.addEventListener('click', () => {
+    const modals = document.querySelectorAll('.modal.active')
+    modals.forEach(modal => {
+        closeModal(modal)
+    })
+})
+
+closeModalButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        const modal = button.closest('.modal')
+        closeModal(modal)
+    })
+})
+
+function openModal() {
+    modal.classList.add('active')
+    overlay.classList.add('active')
+}
+
+function closeModal(modal) {
+    if (modal == null) return
+    modal.classList.remove('active')
+    overlay.classList.remove('active')
+}
 
 //TODO when clicking change to X
 //when we click a box get shape and change to that shape
