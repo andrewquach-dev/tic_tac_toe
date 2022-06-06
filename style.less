@@ -32,6 +32,10 @@ html {
 }
 
 body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
     font-size: 20px;
     font-family: 'Roboto', sans-serif;
     overflow-x: hidden !important;
@@ -64,6 +68,8 @@ body {
     }
 
     main {
+        margin: 0 auto;
+        max-width: 80ch;
         padding: 100/20em;
 
         #grid {
@@ -96,12 +102,6 @@ body {
         }
     }
 
-    *,
-    *::after,
-    *::before {
-        box-sizing: border-box;
-    }
-
     .modal {
         position: fixed;
         top: 50%;
@@ -114,36 +114,29 @@ body {
         background-color: white;
         width: 500px;
         max-width: 80%;
-    }
 
-    .modal.active {
-        transform: translate(-50%, -50%) scale(1);
-    }
+        &.active {
+            transform: translate(-50%, -50%) scale(1);
+        }
 
-    .modal-header {
-        padding: 10px 15px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        border-bottom: 1px solid black;
-    }
 
-    .modal-header .title {
-        font-size: 1.25rem;
-        font-weight: bold;
-    }
+        .modal-content {
+            padding: 10px 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid black;
 
-    .modal-header .close-button {
-        cursor: pointer;
-        border: none;
-        outline: none;
-        background: none;
-        font-size: 1.25rem;
-        font-weight: bold;
-    }
-
-    .modal-body {
-        padding: 10px 15px;
+            .close-button {
+                cursor: pointer;
+                border: none;
+                outline: none;
+                background: none;
+                font-size: 1.25rem;
+                font-weight: bold;
+            }
+        }
     }
 
     #overlay {
@@ -156,13 +149,31 @@ body {
         bottom: 0;
         background-color: rgba(0, 0, 0, .5);
         pointer-events: none;
+
+        &.active {
+            opacity: 1;
+        }
+
     }
 
-    #overlay.active {
-        opacity: 1;
+    #footer {
+        height: 80/20em;
+        margin-top: auto;
+        display: grid;
+        place-content: center;
+        
+        .footer__p {
+            font-size: 1.15rem;
+
+            a {
+                font-weight: bold;
+                text-decoration: none;
+                &:hover {
+                    color: #f25f4c;
+                }
+            }
+        }
     }
-
-
 }
 
 

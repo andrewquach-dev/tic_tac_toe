@@ -1,5 +1,3 @@
-
-
 function TicTacToe(againstRobot = true) {
 
     this._againstRobot = againstRobot;
@@ -7,6 +5,7 @@ function TicTacToe(againstRobot = true) {
     let board = [[' ', ' ', ' '], [' ', ' ', ' '], [' ', ' ', ' ']];
     let isOver = false;
 
+    //Retired, used when game was console
     this.startGame = function () {
         while (!isOver) {
             if (this._againstRobot === true) robotMakesMove();
@@ -16,17 +15,14 @@ function TicTacToe(againstRobot = true) {
         }
     }
 
-    this.getTurn = function () {
-        return turnX ? 'X' : 'O';
-    }
+    this.getTurn = () => turnX ? 'X' : 'O';
 
-    this.changeTurn = function () {
-        turnX = turnX === true ? false : true;
-    }
 
-    this.isGameOver = function () {
-        return isOver === true ? true : false;
-    }
+    this.changeTurn = () => turnX = turnX ? false : true;
+
+
+    this.isGameOver = () => isOver ? true : false;
+
 
     this.updateArrays = function (table) {
         let result = []
@@ -46,25 +42,33 @@ function TicTacToe(againstRobot = true) {
         }
         board = result;
         check();
-        console.log(board);
     }
 
-    function isGameOver(){
-        return isOver;
+    this.reset = () => {
+        board = [[' ', ' ', ' '], [' ', ' ', ' '], [' ', ' ', ' ']];
+        isOver = false;
+    }
+
+    this.isOutcomeDraw = function () {
+        return !theresThreeSameOfAnyKind() && isDraw();
+    }
+
+    this.isWinnerX = function () {
+        turnX = turnX === true ? false : true;
+        return turnX;
     }
 
     function check() {
-        if (theresThree()) {
+        if (theresThreeSameOfAnyKind()) {
             isOver = true;
         } else if (isDraw()) {
             isOver = true;
-            console.log("It's a draw.");
         } else {
             console.log('game not done yet...')
         }
     }
 
-
+    //Retired, used when game was console
     function displayBoard() {
         let boardString = "";
 
@@ -84,7 +88,7 @@ function TicTacToe(againstRobot = true) {
         console.log(boardString)
     }
 
-    let theresThree = function () {
+    let theresThreeSameOfAnyKind = function () {
         return thereAreThreeInRow() === true || thereAreThreeInCol() === true || thereAreThreeDiag() === true ? true : false;
     }
     let isDraw = function () {
@@ -92,10 +96,6 @@ function TicTacToe(againstRobot = true) {
     }
 
     let thereAreThreeInRow = function () {
-        // for (let row of board) {
-        //     if (row.every(mark => mark === 'X') || row.every(mark => mark === 'O')) return true;
-        // }
-        // return false;
         return board.some(row => row.every(ele => ele === 'X') || row.every(ele => ele === 'O'));
     }
 
@@ -116,6 +116,7 @@ function TicTacToe(againstRobot = true) {
         }
     }
 
+    //Retired, used when game was console
     let promptPlayerMove = function () {
         let coord;
         while (true) {
@@ -123,8 +124,15 @@ function TicTacToe(againstRobot = true) {
             if (spotIsAvailable(coord)) break;
         }
         placeMark(coord);
+
     }
 
+    //Retired, used when game was console
+    let spotIsAvailable = function (coord) {
+        return board[coord.split(' ')[0]][coord.split(' ')[1]] === ' ';
+    }
+
+    //Retired, used when game was console
     let robotMakesMove = function () {
         let coords;
         while (true) {
@@ -136,18 +144,15 @@ function TicTacToe(againstRobot = true) {
         }
     }
 
-
-    this.congratulatePlayer = function () {
+    //Retired, used when game was console
+    let congratulatePlayer = function () {
         turnX = turnX === true ? false : true;
         console.log(`Congrats player ${turnX ? 'X' : 'O'}!`);
 
         displayBoard();
     }
 
-    let spotIsAvailable = function (coord) {
-        return board[coord.split(' ')[0]][coord.split(' ')[1]] === ' ';
-    }
-
+    //Retired, used when game was console
     let placeMark = function (coord) {
         board[coord.split(' ')[0]][coord.split(' ')[1]] = turnX ? 'X' : 'O';
         turnX = turnX === true ? false : true;
@@ -156,10 +161,13 @@ function TicTacToe(againstRobot = true) {
 
 }
 
-let game = new TicTacToe();
+const game = new TicTacToe();
+//Below is for console version
 // xAndO.startGame();
-//TODO make gui
-let gridBoxes = document.getElementsByTagName('td');
+const gridBoxes = document.getElementsByTagName('td');
+const closeModalButtons = document.querySelectorAll('[data-close-button]')
+const overlay = document.getElementById('overlay')
+
 
 for (let box of gridBoxes) {
     box.addEventListener("mouseover", function (event) {
@@ -172,35 +180,48 @@ for (let box of gridBoxes) {
     });
 
     box.addEventListener("click", function (event) {
-        if (event.target.innerHTML === ''&& !game.isGameOver()) {
+        if (event.target.innerHTML === '' && !game.isGameOver()) {
             event.target.innerHTML = game.getTurn();
             game.updateArrays(document.getElementById('grid'));
             game.changeTurn();
             if (game.isGameOver()) {
-                game.congratulatePlayer();
+                updateModalWithOutcome();
                 openModal();
             }
         }
     });
 }
-const closeModalButtons = document.querySelectorAll('[data-close-button]')
-const overlay = document.getElementById('overlay')
-
-
-
-overlay.addEventListener('click', () => {
-    const modals = document.querySelectorAll('.modal.active')
-    modals.forEach(modal => {
-        closeModal(modal)
-    })
-})
 
 closeModalButtons.forEach(button => {
     button.addEventListener('click', () => {
         const modal = button.closest('.modal')
         closeModal(modal)
+        game.reset();
+        clearBoard();
     })
 })
+
+function getGameOutcome() {
+    if (game.isOutcomeDraw()) {
+        return 'Draw...'
+    } else if (game.isWinnerX()) {
+        return 'Congrats X';
+    } else {
+        return 'Congrats O';
+    }
+}
+
+
+function clearBoard() {
+    for (let box of gridBoxes) {
+        box.innerText = "";
+    }
+}
+
+function updateModalWithOutcome() {
+    let h2 = document.querySelector('.modal-h2');
+    h2.innerText = getGameOutcome();
+}
 
 function openModal() {
     modal.classList.add('active')
@@ -213,13 +234,5 @@ function closeModal(modal) {
     overlay.classList.remove('active')
 }
 
-//TODO when clicking change to X
-//when we click a box get shape and change to that shape
-//update the 2darray
-//check if game is solved
-//if it's solved prevent from clicking and congratulate
-//if its not solved then robot will make move
-
-//TODO Replay button
-
+//TODO make it look better and behave smoother (a lil clunky)
 //TODO robot mode(if unchecked then against human) checkbox
