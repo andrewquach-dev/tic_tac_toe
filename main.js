@@ -235,4 +235,5 @@ function closeModal(modal) {
 }
 
 //TODO make it look better and behave smoother (a lil clunky)
+//https://codepen.io/jh3y/pen/KKNwpzN
 //TODO robot mode(if unchecked then against human) checkbox
